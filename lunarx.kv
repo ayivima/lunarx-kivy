@@ -1,0 +1,127 @@
+#:kivy 1.0
+
+Root:
+	FloatLayout:
+		id: fl1
+		
+		Video:
+			id: vid1
+			source: 'media/moon_bgd4b.mp4'
+			state: 'play'
+			options: {'eos': 'loop'}
+			allow_stretch: True
+		
+		Label:
+			id: heading
+			pos_hint: {'center_y': .6}
+			text: 'LunarX'
+			font_name: 'fonts/minstrel.ttf'
+			font_size: 100
+			color: 1,1,0,1
+		
+		Label:
+			id: tooltip1
+			text: 'Resurrecting Moon Research'
+			font_name: 'fonts/AutorichSansLite.ttf'
+			font_size: 18
+			pos_hint: {'center_y': .50}
+
+		
+		Button:
+			id: testbutton
+			text: 'Test Rock Detection'
+			background_color: 1, 1, 0, 0.5
+			size_hint: .30, .07
+			font_name: 'fonts/dekthusian.ttf'
+			font_size: 16
+			pos_hint: {'center_x': .5, 'center_y': .38}
+			on_press: vid1.state='stop'; fl1.opacity=0; fl2.opacity=1; 
+		
+	
+	FloatLayout:
+		id: fl2
+		opacity: 0
+		
+		Label:
+			id: result_heading
+			text: 'Moon Surface Segmentation & Rock Detection'
+			font_name: 'fonts/dekthusian.ttf'
+			font_size: 18
+			pos_hint: {'center_y': .85}
+		
+		Label:
+			id: newmessage
+			text: "Click on the `Upload Image` button \nto upload an image for analysis"
+			font_size: 18
+			pos_hint: {'center_y': .50}
+		
+		Image:
+			id: segm
+			opacity:0
+			source: 'outputs/rockseg.png'
+			size_hint: .48, .48
+			pos_hint: {'center_x': .25, 'center_y': .59}
+		
+		Label:
+			id: segm_heading
+			opacity:0
+			text: 'Rock Segmentation'
+			#font_name: 'fonts/AutorichSansLite.ttf'
+			font_size: 18
+			pos_hint: {'center_x': .25, 'center_y': .39}
+		
+		Image:
+			id: rdetect
+			opacity:0
+			source: 'outputs/largerock.png'
+			size_hint: .45, .45
+			pos_hint: {'center_x': .75, 'center_y': .59}
+		
+		Label:
+			id: rdetect_heading
+			opacity:0
+			text: 'Large Rock Detection'
+			#font_name: 'fonts/AutorichSansLite.ttf'
+			font_size: 18
+			pos_hint: {'center_x': .75, 'center_y': .39}
+		
+		Button:
+			id: donebutton
+			text: 'Done'
+			background_color: 0, 1, 0, 0.5
+			size_hint: .20, .07
+			font_name: 'fonts/dekthusian.ttf'
+			font_size: 16
+			pos_hint: {'center_x': .60, 'center_y': .2}
+			on_release:  fl2.opacity=0; fl1.opacity=1; vid1.state='play'
+		
+		Button:
+			id: uploadbutton
+			text: 'Upload Image'
+			background_color: 1, 1, 0, 0.5
+			size_hint: .20, .07
+			font_name: 'fonts/dekthusian.ttf'
+			font_size: 16
+			pos_hint: {'center_x': .40, 'center_y': .2}
+			on_release: root.show_load()
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+	
+
